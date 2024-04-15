@@ -1,7 +1,6 @@
 package pixigo
 
 import (
-	"fmt"
 	"syscall/js"
 )
 
@@ -19,10 +18,6 @@ func Await(v js.Value, name string, args ...any) (then, catch []js.Value) {
 	catchChan := make(chan []js.Value)
 	v.Call(name, args...).
 		Call("then", js.FuncOf(func(this js.Value, args []js.Value) any {
-			for _, i := range args {
-				fmt.Printf(">>> (%s) %#v\n", name, i)
-			}
-
 			thenChan <- args
 			return nil
 		})).
