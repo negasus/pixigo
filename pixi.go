@@ -1,12 +1,28 @@
 package pixigo
 
-import "syscall/js"
+import (
+	"fmt"
+	"syscall/js"
+)
 
-func Await(v js.Value, name string, args ...any) ([]js.Value, []js.Value) {
+type Container interface {
+	SetJSV(js.Value)
+	JSV() js.Value
+}
+
+func PIXI() js.Value {
+	return js.Global().Get("PIXI")
+}
+
+func Await(v js.Value, name string, args ...any) (then, catch []js.Value) {
 	thenChan := make(chan []js.Value)
 	catchChan := make(chan []js.Value)
 	v.Call(name, args...).
 		Call("then", js.FuncOf(func(this js.Value, args []js.Value) any {
+			for _, i := range args {
+				fmt.Printf(">>> (%s) %#v\n", name, i)
+			}
+
 			thenChan <- args
 			return nil
 		})).
@@ -16,9 +32,9 @@ func Await(v js.Value, name string, args ...any) ([]js.Value, []js.Value) {
 		}))
 
 	select {
-	case then := <-thenChan:
+	case then = <-thenChan:
 		return then, nil
-	case catch := <-catchChan:
+	case catch = <-catchChan:
 		return nil, catch
 	}
 }

@@ -1,51 +1,44 @@
 package application
 
 import (
-	"fmt"
 	"syscall/js"
 
 	"github.com/negasus/pixigo"
+	"github.com/negasus/pixigo/container"
+	"github.com/negasus/pixigo/rectangle"
+	"github.com/negasus/pixigo/ticker"
 )
 
 type Application struct {
-	v js.Value
+	jsv    js.Value
+	stage  *container.Container
+	screen *rectangle.Rectangle
+	ticker *ticker.Ticker
 }
 
 func New() *Application {
-	app := &Application{}
-
-	app.v = js.Global().Get("PIXI").Get("Application").New()
-
-	return app
-}
-
-type InitOptions struct {
-	Background int
-	ResizeTo   any
-}
-
-func (opt *InitOptions) marshal() map[string]any {
-	args := map[string]any{}
-
-	if opt.Background != 0 {
-		args["background"] = opt.Background
+	v := &Application{
+		jsv:    pixigo.PIXI().Get("Application").New(),
+		stage:  container.New(),
+		screen: &rectangle.Rectangle{},
+		ticker: &ticker.Ticker{},
 	}
 
-	if opt.ResizeTo != nil {
-		args["resizeTo"] = opt.ResizeTo
-	}
-
-	return args
+	return v
 }
 
-func (app *Application) Init(options *InitOptions) error {
-	_, catch := pixigo.Await(app.v, "init", options.marshal())
-	if catch != nil {
-		return fmt.Errorf("failed to init: %v", catch)
-	}
+func (v *Application) Canvas() js.Value {
+	return v.jsv.Get("canvas")
+}
 
-	js.Global().Get("document").Get("body").Call("appendChild", app.v.Get("canvas"))
+func (v *Application) Stage() *container.Container {
+	return v.stage
+}
 
-	return nil
+func (v *Application) Screen() *rectangle.Rectangle {
+	return v.screen
+}
 
+func (v *Application) Ticker() *ticker.Ticker {
+	return v.ticker
 }
