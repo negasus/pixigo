@@ -14,6 +14,10 @@ func (v *ObservablePoint) SetY(y float64) {
 	v.jsv.Set("y", y)
 }
 
+func (v *ObservablePoint) Set(x, y float64) {
+	v.jsv.Call("set", x, y)
+}
+
 func (v *ObservablePoint) JSV() js.Value {
 	return v.jsv
 }
