@@ -1,8 +1,13 @@
 package rectangle
 
-import "syscall/js"
+import (
+	"syscall/js"
+
+	"github.com/negasus/pixigo/bounds"
+)
 
 type Rectangle struct {
+	bounds.Bounds
 	jsv js.Value
 }
 

@@ -4,7 +4,10 @@ import (
 	"syscall/js"
 
 	"github.com/negasus/pixigo"
+	"github.com/negasus/pixigo/observable"
 )
+
+//go:generate go run ../cmd/gen --src_dir ../container --src_type Container --dest_type Graphics --dest_package graphics
 
 type FillStyleInputs struct {
 	Width int
@@ -25,8 +28,10 @@ func (i *FillStyleInputs) marshal() map[string]any {
 	return res
 }
 
+// Graphics https://pixijs.download/release/docs/scene.Graphics.html
 type Graphics struct {
-	jsv js.Value
+	jsv   js.Value
+	pivot *observable.Point // Container
 }
 
 func New() *Graphics {
@@ -53,10 +58,5 @@ func (v *Graphics) Stroke(i *FillStyleInputs) {
 	v.jsv.Call("stroke", i.marshal())
 }
 
-func (v *Graphics) JSV() js.Value {
-	return v.jsv
-}
-
-func (v *Graphics) SetJSV(jsv js.Value) {
-	v.jsv = jsv
-}
+func (v *Graphics) JSV() js.Value       { return v.jsv }
+func (v *Graphics) SetJSV(jsv js.Value) { v.jsv = jsv }

@@ -8,10 +8,15 @@ import (
 	"github.com/negasus/pixigo/texture"
 )
 
+//go:generate go run ../cmd/gen --src_dir ../container --src_type Container --dest_type Sprite --dest_package sprite
+
+// Sprite
+// @inherits container.Container
 type Sprite struct {
 	jsv    js.Value
-	anchor *observable.ObservablePoint
-	scale  *observable.ObservablePoint
+	anchor *observable.Point
+	scale  *observable.Point
+	pivot  *observable.Point // Container
 }
 
 func FromTexture(txt *texture.Texture) *Sprite {
@@ -19,8 +24,8 @@ func FromTexture(txt *texture.Texture) *Sprite {
 
 	v := &Sprite{
 		jsv:    s,
-		anchor: &observable.ObservablePoint{},
-		scale:  &observable.ObservablePoint{},
+		anchor: &observable.Point{},
+		scale:  &observable.Point{},
 	}
 
 	v.anchor.SetJSV(s.Get("anchor"))
@@ -29,42 +34,17 @@ func FromTexture(txt *texture.Texture) *Sprite {
 	return v
 }
 
-func (v *Sprite) X() float64 {
-	return v.jsv.Get("x").Float()
-}
-
-func (v *Sprite) Y() float64 {
-	return v.jsv.Get("y").Float()
-}
-
-func (v *Sprite) SetX(x float64) {
-	v.jsv.Set("x", x)
-}
-
-func (v *Sprite) SetY(y float64) {
-	v.jsv.Set("y", y)
-}
-
-func (v *Sprite) Anchor() *observable.ObservablePoint {
+func (v *Sprite) Anchor() *observable.Point {
 	return v.anchor
 }
 
-func (v *Sprite) Scale() *observable.ObservablePoint {
+func (v *Sprite) Scale() *observable.Point {
 	return v.scale
-}
-
-func (v *Sprite) SetJSV(value js.Value) {
-	v.jsv = value
-}
-
-func (v *Sprite) JSV() js.Value {
-	return v.jsv
 }
 
 func (v *Sprite) SetTint(value float64) {
 	v.jsv.Set("tint", value)
 }
 
-func (v *Sprite) SetRotation(f float64) {
-	v.jsv.Set("rotation", f)
-}
+func (v *Sprite) JSV() js.Value         { return v.jsv }
+func (v *Sprite) SetJSV(value js.Value) { v.jsv = value }
