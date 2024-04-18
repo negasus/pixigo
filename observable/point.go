@@ -6,6 +6,19 @@ type Point struct {
 	jsv js.Value
 }
 
+func New(x, y float64) *Point {
+	v := &Point{}
+	v.jsv = js.Global().Get("PIXI").Get("ObservablePoint").New(x, y)
+	return v
+}
+
+func (v *Point) Marshal() map[string]any {
+	return map[string]any{
+		"x": v.X(),
+		"y": v.Y(),
+	}
+}
+
 func (v *Point) X() float64       { return v.jsv.Get("x").Float() }
 func (v *Point) Y() float64       { return v.jsv.Get("y").Float() }
 func (v *Point) SetX(x float64)   { v.jsv.Set("x", x) }

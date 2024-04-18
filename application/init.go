@@ -7,8 +7,10 @@ import (
 )
 
 type InitOptions struct {
-	Background int
-	ResizeTo   any
+	Background    int
+	ResizeTo      any
+	Antialias     bool
+	UseBackBuffer bool
 }
 
 func (opt *InitOptions) marshal() map[string]any {
@@ -20,6 +22,14 @@ func (opt *InitOptions) marshal() map[string]any {
 
 	if opt.ResizeTo != nil {
 		args["resizeTo"] = opt.ResizeTo
+	}
+
+	if opt.Antialias {
+		args["antialias"] = opt.Antialias
+	}
+
+	if opt.UseBackBuffer {
+		args["useBackBuffer"] = opt.UseBackBuffer
 	}
 
 	return args

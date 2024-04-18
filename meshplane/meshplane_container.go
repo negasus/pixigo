@@ -38,3 +38,6 @@ func (v *MeshPlane) SetRotation(i float64) {
 func (v *MeshPlane) Rotation() float64 {
 	return v.jsv.Get("rotation").Float()
 }
+func (v *MeshPlane) Position() *observable.Point {
+	return v.position
+}

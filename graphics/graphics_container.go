@@ -38,3 +38,6 @@ func (v *Graphics) SetRotation(i float64) {
 func (v *Graphics) Rotation() float64 {
 	return v.jsv.Get("rotation").Float()
 }
+func (v *Graphics) Position() *observable.Point {
+	return v.position
+}

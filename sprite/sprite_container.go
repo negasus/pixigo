@@ -38,3 +38,6 @@ func (v *Sprite) SetRotation(i float64) {
 func (v *Sprite) Rotation() float64 {
 	return v.jsv.Get("rotation").Float()
 }
+func (v *Sprite) Position() *observable.Point {
+	return v.position
+}
